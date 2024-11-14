@@ -137,7 +137,7 @@
           const downloadCompleteText = /*[[#{downloadComplete}]]*/ 'Download Complete';
           window.downloadCompleteText = downloadCompleteText;
           // Create the 'show-game-btn' button
-          var gameButton = $('<button type="button" class="btn btn-primary" id="show-game-btn" style="display:none;">' + boredWaitingText + '</button>');
+          var gameButton = $('<button type="button" class="btn btn-primary" id="show-game-btn" style="display:none; margin-bottom: 10px;">' + boredWaitingText + '</button>');
 
           // Insert the 'show-game-btn' just above the submit button
           submitButton.before(gameButton);
@@ -175,7 +175,31 @@
             ) {
               gameDialog.close();
             }
-          })
+          });
+            form.on('submit', async function (e) {
+                e.preventDefault();
+
+                const action = form.attr('action');
+                const method = form.attr('method');
+                const formData = new FormData(this);
+
+                gameButton.css('display', 'block');
+                submitButton.prop('disabled', true)
+
+                try {
+                    const response = await fetch(action, {
+                        method: method,
+                        body: formData
+                    });
+
+                    gameButton.hide();
+
+                } catch (error) {
+                    gameButton.hide();
+                } finally {
+                    submitButton.prop('disabled', false)
+                }
+            });
         })
       </script>
       <div id="game-container">
